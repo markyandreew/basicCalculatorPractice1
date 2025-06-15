@@ -12,7 +12,8 @@ const calculate = btnValue => {
   const lastChar = input.slice(-1),
     secondToLastChar = input.slice(-2, -1),
     withoutLastChar = input.slice(0, -1),
-    isLastCharOperator = operators.includes(lastChar);
+    isLastCharOperator = operators.includes(lastChar),
+    isInvalidResult = ["Error", "Infinity"].includes(result);
 
 
   // handle equals 
@@ -29,7 +30,7 @@ const calculate = btnValue => {
     const formattedInput = replaceOperators(input);
     try {
       const calculatedValue = eval(formattedInput);
-      result = parseFloat(calculatedValue.toFixed(10));
+      result = parseFloat(calculatedValue.toFixed(10)).toString();
     } catch {
       result = "Error";
     }
@@ -38,20 +39,35 @@ const calculate = btnValue => {
     lastCalculation = true;
     displayBox.classList.add("active");
   } 
+
+
+
+
   // handle AC
   else if (btnValue === "AC") {
     resetCalculator("");
   } 
 
+
+
+
   // handle backspace
     else if (btnValue === "") {
-      input = withoutLastChar;
+      if (lastCalculation) {
+        resetCalculator(result.slice(0, -1));
+      }
+      else input = withoutLastChar;
     }
+
+
+
   // handle numbers
   else {
     if (lastCalculation) resetCalculator(btnValue);
     else input += btnValue;
   }
+
+
 
 
   // update display
